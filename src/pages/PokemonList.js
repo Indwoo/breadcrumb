@@ -1,8 +1,12 @@
 import React from 'react'
+import BreadCrumb from '../components/BreadCrumb'
 
 function PokemonList() {
   return (
-    <div>PokemonList</div>
+    
+    <div>
+      <BreadCrumb/>
+    </div>
   )
 }
 

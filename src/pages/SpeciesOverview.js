@@ -1,8 +1,11 @@
 import React from 'react'
+import BreadCrumb from '../components/BreadCrumb'
 
 function SpeciesOverview() {
   return (
-    <div>SpeciesOverview</div>
+    <div>
+      <BreadCrumb />
+    </div>
   )
 }
 
