@@ -3,62 +3,59 @@ import { Link, useLocation } from 'react-router-dom';
 
 function BreadCrumb() {
   const location = useLocation();
-  const pathnames = location.pathname.split('/').filter((x) => x);
+  const pathnames = location.pathname.split('/').filter(Boolean);
+  console.log(pathnames)
 
-  const [speciesName, setSpeciesName] = useState(null);
-  const [loadingSpecies, setLoadingSpecies] = useState(false);
+  const [name, setName] = useState({ species: null, pokemon: null });
 
-  useEffect(()=>{
-    const speciesIdIndex = pathnames.findIndex((x, i) => pathnames[i - 1] === 'species');
+  useEffect(() => {
+    const fetchName = async () => {
+      const spIdx = pathnames.findIndex((x, i) => pathnames[i - 1] === 'species');
+      const pkIdx = pathnames.findIndex((x, i) => pathnames[i - 1] === 'pokemons');
 
-    if (speciesIdIndex !== -1) {
-      const id = pathnames[speciesIdIndex];
-      setLoadingSpecies(true);
-      fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
-        .then((res) => res.json())
-        .then((data) => setSpeciesName(data.name))
-        .catch(() => setSpeciesName(null))
-        .finally(() => setLoadingSpecies(false));
-    }
-  }, [location.pathname]);
-
-  const getPathname = (segment, index) => {
-    const prev = pathnames[index - 1];
-
-    switch (segment) {
-      case 'species':
-        return 'Pokemon Species List';
-      case 'pokemons':
-        return 'Pokemon List';
-      default:
-        if (prev === 'species') {
-          if (loadingSpecies) return 'Loading...';
-          return speciesName || `species-${segment}`;
+      try {
+        if (spIdx !== -1) {
+          const res = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${pathnames[spIdx]}`);
+          const data = await res.json();
+          setName(prev => ({ ...prev, species: data.name }));
         }
-        return segment;
-    }
-  };
+        if (pkIdx !== -1) {
+          const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pathnames[pkIdx]}`);
+          const data = await res.json();
+          setName(prev => ({ ...prev, pokemon: data.name }));
+        }
+      } catch (err) {
+        console.log('Failed to fetch');
+      }
+    };
+
+    fetchName();
+  }, [location.pathname]);
 
   return (
     <nav>
       <Link to="/">Home</Link>
-      {pathnames.map((segment, i) => {
-        const to = '/' + pathnames.slice(0, i + 1).join('/');
-        const isLast = i === pathnames.length - 1;
+      {pathnames.map((path, i) => {
+        const sep = '/' + pathnames.slice(0, i + 1).join('/');
+        const last = i === pathnames.length - 1;
+        const prev = pathnames[i - 1];
+
+        let text = path;
+        if (prev === 'species' && name.species) text = name.species;
+        if (prev === 'pokemons' && name.pokemon) text = name.pokemon;
+
+        if (path === 'species') text = 'Species';
+        if (path === 'pokemons') text = 'Pokemons';
 
         return (
-          <span key={to}>
+          <span key={sep}>
             {' > '}
-            {isLast ? (
-              <span>{getPathname(segment, i)}</span>
-            ) : (
-              <Link to={to}>{getPathname(segment, i)}</Link>
-            )}
+            {last ? <span>{text}</span> : <Link to={sep}>{text}</Link>}
           </span>
         );
       })}
     </nav>
-  )
+  );
 }
 
-export default BreadCrumb
+export default BreadCrumb;
