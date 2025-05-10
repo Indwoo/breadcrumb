@@ -5,7 +5,6 @@ function SpeciesList() {
   return (
     <div>
       <BreadCrumb />
-      <h1>SpeciesList</h1>
     </div>
   )
 }

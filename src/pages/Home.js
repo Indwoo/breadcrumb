@@ -1,5 +1,11 @@
+import BreadCrumb from "../components/BreadCrumb";
+
 function Home() {
-  return <div>Home Page</div>;
+  return (
+    <div>
+      <BreadCrumb/>
+    </div>
+  )
 }
 
 export default Home;
