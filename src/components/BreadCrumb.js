@@ -9,6 +9,8 @@ function BreadCrumb() {
   const [name, setName] = useState({ species: null, pokemon: null });
   const [isMobile, setIsMobile] = useState(false);
 
+  const [loading, setLoading] = useState({ species: false, pokemon: false });
+
   useEffect(() => {
 
     const updateIsMobile = () => {
@@ -76,8 +78,17 @@ function BreadCrumb() {
         const prev = pathnames[i - 1];
 
         let text = path;
-        if (prev === 'species' && name.species) text = name.species;
-        if (prev === 'pokemons' && name.pokemon) text = name.pokemon;
+        if (prev === 'species') {
+          text = loading.species
+            ? <span className="inline-block h-4 w-20 bg-gray-300 rounded animate-pulse" />
+            : (name.species || path);
+        }
+        
+        if (prev === 'pokemons') {
+          text = loading.pokemon
+            ? <span className="inline-block h-4 w-20 bg-gray-300 rounded animate-pulse" />
+            : (name.pokemon || path);
+        }
 
         if (path === 'species') text = 'Species';
         if (path === 'pokemons') text = 'Pokemons';
