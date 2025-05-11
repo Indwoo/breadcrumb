@@ -7,6 +7,18 @@ function BreadCrumb() {
   console.log(pathnames)
 
   const [name, setName] = useState({ species: null, pokemon: null });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+
+    const updateIsMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    updateIsMobile();
+    window.addEventListener('resize', updateIsMobile);
+    return () => window.removeEventListener('resize', updateIsMobile);
+  }, []);
 
   useEffect(() => {
     const fetchName = async () => {
@@ -32,6 +44,10 @@ function BreadCrumb() {
     fetchName();
   }, [location.pathname]);
 
+  const skipName = isMobile && pathnames.length > 3
+    ? [pathnames[0], '...', pathnames[pathnames.length - 1]]
+    : pathnames;
+
   return (
     <nav className="flex" aria-label="Breadcrumb">
     <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -44,7 +60,17 @@ function BreadCrumb() {
         </Link>
       </li>
 
-      {pathnames.map((path, i) => {
+      {skipName.map((path, i) => {
+        if (path === '...') {
+          return (
+            <li key="ellipsis">
+              <div className="flex items-center">
+                <span className="mx-2 text-gray-400">...</span>
+              </div>
+            </li>
+          );
+        }
+
         const sep = '/' + pathnames.slice(0, i + 1).join('/');
         const last = i === pathnames.length - 1;
         const prev = pathnames[i - 1];
