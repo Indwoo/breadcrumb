@@ -1,5 +1,15 @@
+import BreadCrumb from "../components/BreadCrumb";
+
 function Home() {
-  return <div>Home Page</div>;
+  const handleBreadcrumbClick = (path) => {
+    console.log(`Breadcrumb Path: ${path}`);
+  };
+
+  return (
+    <div className="p-4">
+      <BreadCrumb BreadcrumbClick={handleBreadcrumbClick} />
+    </div>
+  );
 }
 
 export default Home;

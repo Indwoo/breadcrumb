@@ -4,6 +4,7 @@ import SpeciesList from './pages/SpeciesList';
 import SpeciesOverview from './pages/SpeciesOverview';
 import PokemonList from './pages/PokemonList';
 import PokemonDetail from './pages/PokemonDetail';
+import './styles/main.css';
 
 function App() {
   return (
