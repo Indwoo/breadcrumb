@@ -2,12 +2,15 @@ import React from 'react'
 import BreadCrumb from '../components/BreadCrumb'
 
 function SpeciesList() {
+  const handleBreadcrumbClick = (path) => {
+    console.log(`Breadcrumb Path: ${path}`);
+  };
+
   return (
-    <div>
-      <BreadCrumb />
-      <h1>SpeciesList</h1>
+    <div className="p-4">
+      <BreadCrumb BreadcrumbClick={handleBreadcrumbClick} />
     </div>
-  )
+  );
 }
 
 export default SpeciesList
